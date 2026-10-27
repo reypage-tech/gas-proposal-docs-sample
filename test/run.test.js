@@ -1,10 +1,10 @@
 const t = require('node:test'); const a = require('node:assert');
 const load = require('./load'); const M = require('./mocks'); const { sheet, services, dump, P, LI, TABLE } = M;
 const DEALS = [['DealId', 'ClientName', 'ServiceType', 'Address', 'ContactEmail'],
-  ['D-1001', 'Sample Cleaning Co', 'Office cleaning', '100 Example St', 'contact@example.com'],
-  ['D-1002', '', 'Window cleaning', '200 Example Ave', ''],
+  ['D-1001', 'Sample Survey Co', 'Site survey', '100 Example St', 'contact@example.com'],
+  ['D-1002', '', 'Boundary survey', '200 Example Ave', ''],
   ['D-1003', 'Demo Clinic', 'Carpet', '300 Example Rd', 'bad-address'],
-  ['D-1001', 'Dup Co', 'Office cleaning', '', ''], ['', '', '', '', '']];
+  ['D-1001', 'Dup Co', 'Site survey', '', ''], ['', '', '', '', '']];
 const LINES = [['DealId', 'Item', 'Qty', 'UnitPrice'], ['D-1001', 'Visit', 4, 150], ['D-1001', 'Supplies', 1, 99.5], ['D-1003', 'Room', 2, 80]];
 function setup(opts = {}) {
   const c = load(); const svc = services(opts);
@@ -29,7 +29,7 @@ t('full run: docs, pdfs, write-back, skips', () => {
 t('placeholders filled, tag-only paragraph replaced by table, template untouched', () => {
   const { c, svc, docOf } = setup(); c.runAll(svc);
   const d = dump(docOf(1).body);
-  a.deepStrictEqual(d, ['Dear Sample Cleaning Co, Office cleaning at 100 Example St. Total $699.50 on 2026-10-28.',
+  a.deepStrictEqual(d, ['Dear Sample Survey Co, Site survey at 100 Example St. Total $699.50 on 2026-10-28.',
     'T: Item\tQty\tUnit price\tAmount\tVisit\t4\t$150.00\t$600.00\tSupplies\t1\t$99.50\t$99.50']);
   a.match(svc.files[M.TEMPLATE_ID].body.getText(), /\{\{ClientName\}\}/);
 });

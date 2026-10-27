@@ -1,5 +1,8 @@
 # Google Docs proposals from CRM rows (Apps Script sample)
 
+## Template Doc
+[Make a copy of the template Doc](https://docs.google.com/document/d/1EOYhbxU17O6odZ4I0zbC8TstZzIurqL5l8Znvx_WsAc/copy) (Google Docs asks you to save your own copy). It holds every tag in the table below in place of the values. Replace "Your Survey Company" with your company name, then put your copy's Doc ID in `CONFIG.TEMPLATE_ID` in `src/Code.gs`.
+
 ## Template tags and the 13 fields in the posting
 | # | Field in the posting | Template tag(s) | Example |
 |---|---|---|---|

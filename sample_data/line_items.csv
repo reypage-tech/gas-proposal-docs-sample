@@ -1,4 +1,6 @@
 DealId,Item,Qty,UnitPrice
-D-1001,Weekly office clean (per visit),4,150
-D-1001,Supplies,1,99.5
-D-1003,Carpet deep clean (per room),3,
+D-1001,Laser scan field work (per day),2,1800
+D-1001,As-built floor plans (per floor),2,950
+D-1001,Exterior elevations (per side),4,250
+D-1003,Interior laser scan (per floor),2,1100
+D-1003,Floor plans with true geometry (per floor),2,

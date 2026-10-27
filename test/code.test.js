@@ -1,0 +1,13 @@
+const t = require('node:test'); const a = require('node:assert');
+const c = require('./load')();
+t('placeholders filled, unknown kept', () => a.strictEqual(c.fillPlaceholders('Hi {{ClientName}} {{X}}', { ClientName: 'Acme' }), 'Hi Acme {{X}}'));
+t('missing fields reported', () => a.deepStrictEqual(Array.from(c.missingFields({ DealId: 'D1', ClientName: ' ' })), ['ClientName', 'ServiceType']));
+t('totals', () => a.deepStrictEqual({ ...c.calcTotals([{ Qty: 2, UnitPrice: 150 }, { Qty: 1, UnitPrice: 99.5 }], 0.1) }, { subtotal: 399.5, tax: 39.95, total: 439.45 }));
+t('totals avoid float noise', () => a.strictEqual(c.calcTotals([{ Qty: 3, UnitPrice: 0.1 }], 0).total, 0.3));
+t('skip row with missing fields', () => a.strictEqual(c.generateProposal({ DealId: 'D1' }, []).status, 'Skipped'));
+t('ready row', () => a.strictEqual(c.generateProposal({ DealId: 'D2', ClientName: 'Sample Co', ServiceType: 'Cleaning' }, [{ Item: 'x', Qty: 1, UnitPrice: 10 }]).name, 'Proposal - Sample Co (D2)'));
+t('skip when no line items', () => a.strictEqual(c.planRow({ DealId: 'D2', ClientName: 'S', ServiceType: 'C' }, []).reason, 'No line items'));
+t('skip when a line item is broken', () => a.match(c.planRow({ DealId: 'D2', ClientName: 'S', ServiceType: 'C' }, [{ Item: 'x', Qty: 2, UnitPrice: '' }]).reason, /1 line item/));
+t('splitList', () => a.deepStrictEqual(Array.from(c.splitList('a\n- b; • c;;')), ['a', 'b', 'c']));
+t('driveId from id, /d/ url, ?id= url, junk', () => a.deepStrictEqual(['abcdefghij12', 'https://drive.google.com/file/d/XyZ_123-456/view', 'https://drive.google.com/open?id=Q1w2e3r4t5', 'no'].map(c.driveId), ['abcdefghij12', 'XyZ_123-456', 'Q1w2e3r4t5', '']));
+t('blockTags finds List/Image/Check only', () => a.deepStrictEqual(Array.from(c.blockTags('{{A}} {{List:X}} {{Image:Y}} {{Check:Z}}')).map(b => b.kind + ':' + b.col), ['List:X', 'Image:Y', 'Check:Z']));

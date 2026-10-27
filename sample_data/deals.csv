@@ -1,0 +1,4 @@
+DealId,ClientName,ContactName,ContactEmail,ContactPhone,Address,ServiceType,ScopeOfWork,SurveyAreas,SurveyImages,Equipment,SitePhotos,Deliverables,PlanSheets,DeliverableImages,Included,Excluded,Orthogonal,TrueGeometry,ComplimentaryServices,Terms,ValidUntil
+D-1001,Sample Survey Client LLC,Contact A,contact@example.com,000-000-0000,100 Example St,Site survey,Survey of the main building and parking lot.,North lot;South lot,PUT_DRIVE_FILE_ID_1,Laser scanner;GNSS receiver,PUT_DRIVE_FILE_ID_2,Floor plans;Elevations,A-101 Floor plan;A-201 Elevations,PUT_DRIVE_FILE_ID_3,Walls;Doors;Windows,Furniture;MEP,yes,no,Point cloud viewer access,Valid for 30 days.,2026-11-30
+D-1002,,Contact B,,,200 Example Ave,Site survey,,,,,,,,,,,,,,,2026-11-30
+D-1003,Demo Clinic Holdings,Contact C,office@example.org,,300 Example Rd,Interior survey,Interior survey of two floors.,Floor 1;Floor 2,,Laser scanner,,Floor plans,A-101 Floor plan,,Walls,Ceilings,no,yes,,Valid for 30 days.,2026-12-15

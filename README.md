@@ -5,7 +5,7 @@ For a land-survey firm's sales staff: instead of copying each deal from the CRM 
 ![Proposal cover (fictional Bluestone example, page 1)](examples/proposal_bluestone-1.png)
 ![Proposal costs page (fictional Bluestone example, page 5)](examples/proposal_bluestone-5.png)
 
-Mock output rebuilt in HTML/CSS with fictional data. Not a screenshot of real Google Docs. Tests: 32 of 32 pass with `npm test` (local mocks only, not yet run in a real Apps Script project).
+Tests: 32 of 32 pass with `npm test` (local mocks only, not yet run in a real Apps Script project). The pages above are mock output with fictional data; see the note under Example output.
 
 ## Template Doc
 [Make a copy of the template Doc](https://docs.google.com/document/d/1EOYhbxU17O6odZ4I0zbC8TstZzIurqL5l8Znvx_WsAc/copy) (Google Docs asks you to save your own copy). It holds every tag in the table below in place of the values. Replace "Your Survey Company" with your company name, then put your copy's Doc ID in `CONFIG.TEMPLATE_ID` in `src/Code.gs`.
@@ -105,7 +105,6 @@ CRMから出した案件の行（シート）を1件ずつ読み、Google Docs�
 - 作り直すとDocsの本文を写し直すので、Docs上で手で直した所は消えます
 - 文書のURLは作り直しても変わりません。PDFのURLは、`USE_ADVANCED_DRIVE` が切ってあると作り直すたびに変わります（古いPDFはゴミ箱へ）
 - 画像は行の中に置く形です。見た目と画像の位置は、依頼主から届く見本に合わせて作り直します（見本PDFはまだ見ていません）
-- `examples/` の見本ページはHTMLで再現したもので、実際のGoogle Docsで作ったものではありません
 - 本文の写し直しは段落・箇条書き・表を写します。ヘッダー・フッターはひな形のものが作業用にだけ残るので、ヘッダーにタグは置かないでください
 - 文書を写す途中で止まった場合、古い文書が途中までの中身になることがあります（PDFは新しいもの）。行は `Error` になるので、もう一度実行してください
 - 1回の実行時間の上限（6分）を超える件数は分けて実行してください

@@ -37,82 +37,82 @@ These pages are a reproduction of how it looks in Google Docs. They were laid ou
 ## How it works
 Each deal row in a Google Sheet becomes a proposal made from one Google Docs template. The script fills text tags, bullet lists, images from Drive, ☑/☐ checkboxes and a priced line-item table, saves a PDF in a Drive folder, and writes the Doc link, PDF link and status back to the row. Rerunning a row updates the same Doc. Rows with missing fields are skipped with a reason. An optional Gmail draft is off by default and mail is never sent.
 
-## 概要
-CRMから出した案件の行（シート）を1件ずつ読み、Google Docsのひな形1つから提案書を作ります。文字、箇条書き、Driveの画像、☑/☐ のチェック欄、金額の表を差し込み、PDFをDriveのフォルダに保存し、行にURLと状態を書き戻します。
+## Overview
+It reads deal rows (sheet rows) exported from CRM one by one and creates proposals from a single Google Docs template. It inserts text, bullet lists, Drive images, ☑/☐ checkboxes, and a price table, saves the PDF to a Drive folder, and writes the URL and status back to the row.
 
-## 仕組み
-1. `Deals` シートの行を上から読む
-2. 必須項目と明細を確かめる。足りなければ `Skipped` と理由を書いて次へ
-3. ひな形を作業用にコピーし、タグを埋める
-4. 作業用の文書からPDFを作る
-5. 文書とPDFの両方ができてから、古いものに手をつける
-   - 前回の `DocUrl` があれば、その文書の本文を消して作業用の中身を写す（URLはそのまま）。作業用はゴミ箱へ
-   - PDFは新しく保存してから古いPDFをゴミ箱へ（Advanced Drive を使う設定なら同じファイルの中身を差し替え）
-6. 途中で失敗したら作業用だけをゴミ箱へ移し、古い文書とPDFはそのまま。行は `Error` と理由
-7. `DocUrl` `PdfUrl` `Status` `Note` `UpdatedAt` を行に書き戻す
+## How it works
+1. Read rows in the `Deals` sheet from top to bottom
+2. Check required fields and line items. If anything is missing, write `Skipped` and the reason, then continue
+3. Copy the template for working use and fill in tags
+4. Create a PDF from the working document
+5. Change existing files only after both the new document and PDF are ready
+   - If there is a previous `DocUrl`, clear that document body and copy in the working content (keep the same URL). Move the working copy to trash
+   - Save a new PDF first, then move the old PDF to trash (if configured to use Advanced Drive, replace the content in the same file)
+6. If it fails partway through, move only the working copy to trash and keep the old document and PDF as is. Mark the row as `Error` with a reason
+7. Write `DocUrl` `PdfUrl` `Status` `Note` `UpdatedAt` back to the row
 
-## シートの列
-**Deals**（1行目が見出し）
+## Sheet columns
+**Deals** (row 1 is headers)
 
-| 列 | 必須 | 内容 |
+| Column | Required | Content |
 |---|---|---|
-| DealId | はい | 案件ID。重複した2行目以降は `Skipped` |
-| ClientName | はい | 宛先の会社名 |
-| ServiceType | はい | サービス名 |
-| ContactName, ContactEmail, ContactPhone, Address | | 表紙の連絡先 |
-| ScopeOfWork, Terms | | 文 |
-| SurveyAreas, Equipment, Deliverables, PlanSheets, Included, Excluded, ComplimentaryServices | | 箇条書き。改行か `;` で区切る |
-| SurveyImages, SitePhotos, DeliverableImages | | DriveのファイルIDかURL。改行か `;` で区切る |
-| Orthogonal, TrueGeometry | | yes / true / x / 1 なら ☑、ほかは ☐ |
-| ValidUntil | | 日付（script の時間帯で yyyy-MM-dd） |
-| DocUrl, PdfUrl, Status, Note, UpdatedAt | | スクリプトが書く。なければ見出しを足します |
+| DealId | Yes | Deal ID. Duplicate rows from the second duplicate onward are `Skipped` |
+| ClientName | Yes | Recipient company name |
+| ServiceType | Yes | Service name |
+| ContactName, ContactEmail, ContactPhone, Address | | Contact details on the cover page |
+| ScopeOfWork, Terms | | Text |
+| SurveyAreas, Equipment, Deliverables, PlanSheets, Included, Excluded, ComplimentaryServices | | Bullet list items. Split by newline or `;` |
+| SurveyImages, SitePhotos, DeliverableImages | | Drive file IDs or URLs. Split by newline or `;` |
+| Orthogonal, TrueGeometry | | If yes / true / x / 1 then ☑, otherwise ☐ |
+| ValidUntil | | Date (yyyy-MM-dd in the script time zone) |
+| DocUrl, PdfUrl, Status, Note, UpdatedAt | | Written by the script. Header names are added if missing |
 
-列名は自由に足せます。上の名前は、最初の表の13項目に合わせた例です。
+You can add any column names freely. The names above are examples matched to the 13 items in the first table.
 
-**LineItems**: `DealId, Item, Qty, UnitPrice`（Qtyは0より大きい数、UnitPriceは0以上）
+**LineItems**: `DealId, Item, Qty, UnitPrice` (Qty is a number greater than 0, UnitPrice is 0 or more)
 
-**Log**（任意）: 1回ごとに `日時, 作成数, スキップ数, エラー数` を1行足します。
+**Log** (optional): add one row per run with `DateTime, CreatedCount, SkippedCount, ErrorCount`.
 
-## 差し込みタグ
-| タグ | 中身 |
+## Merge tags
+| Tag | Content |
 |---|---|
-| `{{列名}}` | Deals の同じ名前の列の文字 |
-| `{{List:列名}}` | その列を箇条書きに。値が空ならタグの行ごと消す |
-| `{{Image:列名}}` | その列のDrive画像を順に入れる。幅は `IMAGE_WIDTH`（450pt）まで縮める |
-| `{{Check:列名}}` | ☑ か ☐ |
-| `{{Subtotal}}` `{{Tax}}` `{{Total}}` | 明細から計算（例 `$699.50`） |
-| `{{Today}}` | 作成日（script の時間帯） |
-| `{{LineItems}}` | 明細の表（Item / Qty / Unit price / Amount） |
+| `{{ColumnName}}` | Text from the `Deals` column with the same name |
+| `{{List:ColumnName}}` | Convert that column into a bullet list. If the value is empty, remove the whole tag line |
+| `{{Image:ColumnName}}` | Insert Drive images from that column in order. Width is reduced to `IMAGE_WIDTH` (450pt) |
+| `{{Check:ColumnName}}` | ☑ or ☐ |
+| `{{Subtotal}}` `{{Tax}}` `{{Total}}` | Calculated from line items (example: `$699.50`) |
+| `{{Today}}` | Creation date (script time zone) |
+| `{{LineItems}}` | Line item table (Item / Qty / Unit price / Amount) |
 
-箇条書き・画像・表のタグの置き方:
-- タグだけの段落（または箇条書きの1行）なら、その段落と入れ替え
-- 同じ段落にほかの文字があれば、タグの文字だけ消して、その段落のすぐ後に入れる
-- 表のマスの中にあるときは、その表のすぐ後に入れる
-- `{{LineItems}}` がひな形にないときは、最後に表を足し、Note に `No {{LineItems}} tag, added at the end` と書く
+How to place bullet list, image, and table tags:
+- If it is a paragraph with only the tag (or one bullet line), replace that paragraph
+- If there is other text in the same paragraph, remove only the tag text and insert content right after that paragraph
+- If it is inside a table cell, insert content right after that table
+- If `{{LineItems}}` is not in the template, add the table at the end and write `No {{LineItems}} tag, added at the end` in Note
 
-## 設定手順
-1. シートに `Deals` `LineItems` `Log` を作る（`sample_data/` のCSVを読み込めます。`PUT_DRIVE_FILE_ID_*` は自分の画像のIDに）
-2. 上のタグを入れたDocsのひな形を作り、IDを控える
-3. 出力先のDriveフォルダを作り、IDを控える
-4. 拡張機能 > Apps Script に `src/Code.gs` を貼る
-5. `CONFIG` の `TEMPLATE_ID` `FOLDER_ID` `TAX_RATE` `CURRENCY` `IMAGE_WIDTH` を書き換える
-6. 作り直しでもPDFのURLを変えたくないなら、サービスに Drive API（Advanced Drive）を足して `USE_ADVANCED_DRIVE: true`
-7. 下書きが要るなら `CREATE_DRAFT: true`（求人本文はメールに触れていないので初期は切ってあります）
-8. プロジェクトの設定で時間帯を確かめる（日付はこの時間帯で読みます）
-9. シートを開き直し、メニュー「Proposals > Generate proposals」を実行。初回は権限の確認が出ます
+## Setup steps
+1. Create `Deals` `LineItems` `Log` in the sheet (you can import CSVs from `sample_data/`. Replace `PUT_DRIVE_FILE_ID_*` with your own image IDs)
+2. Create a Docs template with the tags above and keep its ID
+3. Create an output Drive folder and keep its ID
+4. Paste `src/Code.gs` into Extensions > Apps Script
+5. Update `TEMPLATE_ID` `FOLDER_ID` `TAX_RATE` `CURRENCY` `IMAGE_WIDTH` in `CONFIG`
+6. If you want to keep the same PDF URL even after regeneration, add the Drive API service (Advanced Drive) and set `USE_ADVANCED_DRIVE: true`
+7. If you need a draft, set `CREATE_DRAFT: true` (the job posting text does not mention email, so it is off by default)
+8. Check the project time zone in settings (dates are read in this time zone)
+9. Reopen the sheet and run menu "Proposals > Generate proposals". On first run, permission confirmation appears
 
-## この見本でしないこと・限界
-- メールは送りません。`CREATE_DRAFT` のときも Gmail の下書きを作るだけです
-- CRMのAPIにはつなぎません（CSVをシートに貼る前提）
-- ひな形は1つです
-- 作り直すとDocsの本文を写し直すので、Docs上で手で直した所は消えます
-- 文書のURLは作り直しても変わりません。PDFのURLは、`USE_ADVANCED_DRIVE` が切ってあると作り直すたびに変わります（古いPDFはゴミ箱へ）
-- 画像は行の中に置く形です。見た目と画像の位置は、依頼主から届く見本に合わせて作り直します（見本PDFはまだ見ていません）
-- 本文の写し直しは段落・箇条書き・表を写します。ヘッダー・フッターはひな形のものが作業用にだけ残るので、ヘッダーにタグは置かないでください
-- 文書を写す途中で止まった場合、古い文書が途中までの中身になることがあります（PDFは新しいもの）。行は `Error` になるので、もう一度実行してください
-- 1回の実行時間の上限（6分）を超える件数は分けて実行してください
+## Out of scope and limitations
+- It does not send email. Even with `CREATE_DRAFT`, it only creates a Gmail draft
+- It does not connect to the CRM API (assumes CSV is pasted into the sheet)
+- There is one template
+- Regeneration rewrites the Docs body, so manual edits made in Docs are removed
+- The document URL stays the same after regeneration. The PDF URL changes on each regeneration when `USE_ADVANCED_DRIVE` is off (old PDFs are moved to trash)
+- Images are placed inline. Visual style and image positions will be rebuilt to match the sample received from the client (the sample PDF has not been seen yet)
+- Rewriting the document body copies paragraphs, bullet lists, and tables. Header and footer from the template remain only in the working copy, so do not place tags in headers
+- If it stops while copying a document, the old document can end up with partial content (PDF is new). The row becomes `Error`, so run it again
+- If the rows would exceed the time limit for one run (6 minutes), process them in separate runs
 
-## テスト
+## Tests
 ```
 npm test
 ```

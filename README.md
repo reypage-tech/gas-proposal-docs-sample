@@ -30,7 +30,7 @@ Tests: 32 of 32 pass with `npm test`.
 | 12 | Complimentary Services | `{{List:ComplimentaryServices}}` | [page 5](examples/proposal_bluestone-5.png) |
 | 13 | Proposal-specific terms | `{{Terms}}` or `{{List:Terms}}` | [page 5](examples/proposal_bluestone-5.png) |
 
-Example output for two survey firms: [Bluestone PDF](examples/proposal_bluestone.pdf) (pages [1](examples/proposal_bluestone-1.png) [2](examples/proposal_bluestone-2.png) [3](examples/proposal_bluestone-3.png) [4](examples/proposal_bluestone-4.png) [5](examples/proposal_bluestone-5.png)), [Meadowfield PDF](examples/proposal_meadowfield.pdf) (pages [1](examples/proposal_meadowfield-1.png) [2](examples/proposal_meadowfield-2.png) [3](examples/proposal_meadowfield-3.png) [4](examples/proposal_meadowfield-4.png) [5](examples/proposal_meadowfield-5.png)).
+Example output for two fictional survey firms: [Bluestone PDF](examples/proposal_bluestone.pdf) (pages [1](examples/proposal_bluestone-1.png) [2](examples/proposal_bluestone-2.png) [3](examples/proposal_bluestone-3.png) [4](examples/proposal_bluestone-4.png) [5](examples/proposal_bluestone-5.png)), [Meadowfield PDF](examples/proposal_meadowfield.pdf) (pages [1](examples/proposal_meadowfield-1.png) [2](examples/proposal_meadowfield-2.png) [3](examples/proposal_meadowfield-3.png) [4](examples/proposal_meadowfield-4.png) [5](examples/proposal_meadowfield-5.png)).
 
 These pages are a reproduction of how it looks in Google Docs. They were laid out in HTML/CSS and printed to PDF by `examples/build.py`. The client's attached example PDF has not been seen, so this layout is not a copy of it. The layout will be rebuilt to match the example the client provides, with their graphics in the sizes and places they give.
 

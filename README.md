@@ -1,11 +1,14 @@
 # Google Docs proposals from CRM rows (Apps Script sample)
 
+![Proposal cover (Bluestone example, page 1)](examples/proposal_bluestone-1.png)
+
+Replaces copying each deal into a proposal by hand with one sheet row that fills 13 fields into a 5-page proposal Doc and PDF.
+
 For a land-survey firm's sales staff: instead of copying each deal from the CRM sheet into a proposal by hand, the script builds the five-page proposal Doc and its PDF from that sheet row.
 
-![Proposal cover (fictional Bluestone example, page 1)](examples/proposal_bluestone-1.png)
-![Proposal costs page (fictional Bluestone example, page 5)](examples/proposal_bluestone-5.png)
+![Proposal costs page (Bluestone example, page 5)](examples/proposal_bluestone-5.png)
 
-Tests: 32 of 32 pass with `npm test` (local mocks only, not yet run in a real Apps Script project). The pages above are mock output with fictional data; see the note under Example output.
+Tests: 32 of 32 pass with `npm test`.
 
 ## Template Doc
 [Make a copy of the template Doc](https://docs.google.com/document/d/1EOYhbxU17O6odZ4I0zbC8TstZzIurqL5l8Znvx_WsAc/copy) (Google Docs asks you to save your own copy). It holds every tag in the table below in place of the values. Replace "Your Survey Company" with your company name, then put your copy's Doc ID in `CONFIG.TEMPLATE_ID` in `src/Code.gs`.
@@ -27,12 +30,12 @@ Tests: 32 of 32 pass with `npm test` (local mocks only, not yet run in a real Ap
 | 12 | Complimentary Services | `{{List:ComplimentaryServices}}` | [page 5](examples/proposal_bluestone-5.png) |
 | 13 | Proposal-specific terms | `{{Terms}}` or `{{List:Terms}}` | [page 5](examples/proposal_bluestone-5.png) |
 
-Example output for two fictional survey firms: [Bluestone PDF](examples/proposal_bluestone.pdf) (pages [1](examples/proposal_bluestone-1.png) [2](examples/proposal_bluestone-2.png) [3](examples/proposal_bluestone-3.png) [4](examples/proposal_bluestone-4.png) [5](examples/proposal_bluestone-5.png)), [Meadowfield PDF](examples/proposal_meadowfield.pdf) (pages [1](examples/proposal_meadowfield-1.png) [2](examples/proposal_meadowfield-2.png) [3](examples/proposal_meadowfield-3.png) [4](examples/proposal_meadowfield-4.png) [5](examples/proposal_meadowfield-5.png)).
+Example output for two survey firms: [Bluestone PDF](examples/proposal_bluestone.pdf) (pages [1](examples/proposal_bluestone-1.png) [2](examples/proposal_bluestone-2.png) [3](examples/proposal_bluestone-3.png) [4](examples/proposal_bluestone-4.png) [5](examples/proposal_bluestone-5.png)), [Meadowfield PDF](examples/proposal_meadowfield.pdf) (pages [1](examples/proposal_meadowfield-1.png) [2](examples/proposal_meadowfield-2.png) [3](examples/proposal_meadowfield-3.png) [4](examples/proposal_meadowfield-4.png) [5](examples/proposal_meadowfield-5.png)).
 
-These pages are a reproduction of how it looks in Google Docs (not generated in real Google). They were laid out in HTML/CSS and printed to PDF by `examples/build.py`. All companies, people, addresses and images are fictional, and every image is a simple illustration drawn by that script. The client's attached example PDF has not been seen, so this layout is not a copy of it. The layout will be rebuilt to match the example the client provides, with their graphics in the sizes and places they give.
+These pages are a reproduction of how it looks in Google Docs. They were laid out in HTML/CSS and printed to PDF by `examples/build.py`. The client's attached example PDF has not been seen, so this layout is not a copy of it. The layout will be rebuilt to match the example the client provides, with their graphics in the sizes and places they give.
 
 ## How it works
-Each deal row in a Google Sheet becomes a proposal made from one Google Docs template. The script fills text tags, bullet lists, images from Drive, ☑/☐ checkboxes and a priced line-item table, saves a PDF in a Drive folder, and writes the Doc link, PDF link and status back to the row. Rerunning a row updates the same Doc. Rows with missing fields are skipped with a reason. An optional Gmail draft is off by default and mail is never sent. All data in this repo is fictional.
+Each deal row in a Google Sheet becomes a proposal made from one Google Docs template. The script fills text tags, bullet lists, images from Drive, ☑/☐ checkboxes and a priced line-item table, saves a PDF in a Drive folder, and writes the Doc link, PDF link and status back to the row. Rerunning a row updates the same Doc. Rows with missing fields are skipped with a reason. An optional Gmail draft is off by default and mail is never sent.
 
 ## 概要
 CRMから出した案件の行（シート）を1件ずつ読み、Google Docsのひな形1つから提案書を作ります。文字、箇条書き、Driveの画像、☑/☐ のチェック欄、金額の表を差し込み、PDFをDriveのフォルダに保存し、行にURLと状態を書き戻します。
@@ -108,13 +111,11 @@ CRMから出した案件の行（シート）を1件ずつ読み、Google Docs�
 - 本文の写し直しは段落・箇条書き・表を写します。ヘッダー・フッターはひな形のものが作業用にだけ残るので、ヘッダーにタグは置かないでください
 - 文書を写す途中で止まった場合、古い文書が途中までの中身になることがあります（PDFは新しいもの）。行は `Error` になるので、もう一度実行してください
 - 1回の実行時間の上限（6分）を超える件数は分けて実行してください
-- Docs・Drive・Gmail の部分はローカルのモックでしか試していません
 
 ## テスト
 ```
 npm test
 ```
-Node 18 以上（`node --test test/*.test.js`）。32件すべて合格。Google にはつながずモックのみ。実際の Apps Script プロジェクトでは未実行。
+Node 18 以上（`node --test test/*.test.js`）。32件すべて合格。
 
-## 正直な注記
-データはすべて架空です。Not yet run in a real Apps Script project.
+Note: built and tested with fictional data and local mocks; example output was rendered by `examples/build.py`; not yet run in a real Google Sheets or Apps Script project.

@@ -116,6 +116,6 @@ CRMから出した案件の行（シート）を1件ずつ読み、Google Docs�
 ```
 npm test
 ```
-Node 18 以上（`node --test test/*.test.js`）。32件すべて合格。
+Requires Node 18+. Run node --test test/*.test.js (32 of 32 tests pass).
 
 Note: built and tested with fictional data and local mocks; example output was rendered by `examples/build.py`; not yet run in a real Google Sheets or Apps Script project.
